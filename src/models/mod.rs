@@ -1,6 +1,7 @@
 use crate::types::*;
 
 pub mod model1;
+pub mod model2;
 
 #[derive(Debug, Clone)]
 pub struct SolModel {
@@ -35,6 +36,11 @@ pub trait SolisModels {
     fn print(&self);
 }
 
+impl Default for SolModels {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 
 impl SolModels {
     pub fn new () -> SolModels {
@@ -42,12 +48,10 @@ impl SolModels {
     }
 
     pub fn get_model_index(&self, model_number: u16) -> Option<usize> {
-        let mut idx = 0;
-        for model in self.models.iter() {
+        for (idx, model) in self.models.iter().enumerate() {
             if model_number == model.model_number {
                 return Some(idx);
             }
-            idx += 1;
         }
         None
     }
@@ -56,8 +60,9 @@ impl SolModels {
 impl SolisModels for SolModel {
     fn new (model_number: u16) -> SolModel {
         match model_number {
-            1 => model1::model1(),
-            _ => return model1::model1(),
+            1 => model1::model(),
+            2 => model2::model(),
+            _ => model1::model(),
         }
     }
 
@@ -66,34 +71,30 @@ impl SolisModels for SolModel {
             match data_tmp {
                 SDataTypes::SolisU16(data) => {
                     if data.name.contains(point) && (data.name.len() == point.len()){
-                        match value {
-                            SDataTypes::SolisU16(update_value) =>  data.value = update_value.value,
-                            _ => {},
-                        };
+                        if let SDataTypes::SolisU16(update_value) = value {
+                            data.value = update_value.value;
+                        }
                     }
                 },
                 SDataTypes::SolisU32(data) => {
                     if data.name.contains(point) && (data.name.len() == point.len()){
-                        match value {
-                            SDataTypes::SolisU32(update_value) =>  data.value = update_value.value,
-                            _ => {},
-                        };
+                        if let SDataTypes::SolisU32(update_value) = value {
+                            data.value = update_value.value;
+                        }
                     }
                 },
                 SDataTypes::SolisI16(data) => {
                     if data.name.contains(point) && (data.name.len() == point.len()){
-                        match value {
-                            SDataTypes::SolisI16(update_value) =>  data.value = update_value.value,
-                            _ => {},
-                        };
+                        if let SDataTypes::SolisI16(update_value) = value {
+                            data.value = update_value.value;
+                        }
                     }
                 },
                 SDataTypes::SolisI32(data) => {
                     if data.name.contains(point) && (data.name.len() == point.len()){
-                        match value {
-                            SDataTypes::SolisI32(update_value) =>  data.value = update_value.value,
-                            _ => {},
-                        };
+                        if let SDataTypes::SolisI32(update_value) = value {
+                            data.value = update_value.value;
+                        }
                     }
                 },
             }
@@ -103,28 +104,24 @@ impl SolisModels for SolModel {
     fn update_data_by_index(&mut self, index: usize, value: &SDataTypes) {
         match &mut self.data[index] {
             SDataTypes::SolisU16(data) => {
-                match value {
-                    SDataTypes::SolisU16(update_value) =>  data.value = update_value.value,
-                    _ => {},
-                };
+                if let SDataTypes::SolisU16(update_value) = value {
+                    data.value = update_value.value;
+                }
             },
             SDataTypes::SolisU32(data) => {
-                match value {
-                    SDataTypes::SolisU32(update_value) =>  data.value = update_value.value,
-                    _ => {},
-                };
+                if let SDataTypes::SolisU32(update_value) = value {
+                    data.value = update_value.value;
+                }
             },
             SDataTypes::SolisI16(data) => {
-                match value {
-                    SDataTypes::SolisI16(update_value) =>  data.value = update_value.value,
-                    _ => {},
-                };
+                if let SDataTypes::SolisI16(update_value) = value {
+                    data.value = update_value.value;
+                }
             },
             SDataTypes::SolisI32(data) => {
-                match value {
-                    SDataTypes::SolisI32(update_value) =>  data.value = update_value.value,
-                    _ => {},
-                };
+                if let SDataTypes::SolisI32(update_value) = value {
+                    data.value = update_value.value;
+                }
             },
         }
     }
@@ -154,12 +151,11 @@ impl SolisModels for SolModel {
                 },
             };
         }
-        return SDataTypes::SolisU16(Point { name: "", offset: 0, length: 1, write_access: false, value: 0 } )
+        SDataTypes::SolisU16(Point { name: "", offset: 0, length: 1, write_access: false, value: 0 } )
     }
 
     fn get_data_index(&self, point: &str) -> Option<usize> {
-        let mut idx = 0;
-        for data_tmp in self.data.iter() {
+        for (idx, data_tmp) in self.data.iter().enumerate() {
             match data_tmp {
                 SDataTypes::SolisU16(data) => {
                     if data.name.contains(point) && (data.name.len() == point.len()) {
@@ -182,100 +178,87 @@ impl SolisModels for SolModel {
                     }
                 },
             };
-            idx += 1;
         }
-        return None;
+        None
     }
     
     fn get_u16(&self, point: &str) -> Option<u16> {
         for data_tmp in self.data.iter() {
-            match data_tmp {
-                SDataTypes::SolisU16(data) => {
-                    if data.name.contains(point) && (data.name.len() == point.len()) {
-                        return Some(data.value);
-                    }
-                },
-                _ => {}
+            if let SDataTypes::SolisU16(data) = data_tmp {
+                if data.name.contains(point) && (data.name.len() == point.len()) {
+                    return Some(data.value);
+                }
             }
         }
-        return None
+        None
     }
 
     fn get_u16_by_index(&self, idx: usize) -> Option<u16> {
         match self.data[idx] {
             SDataTypes::SolisU16(data) => {
-                return Some(data.value);
+                Some(data.value)
             },
-            _ => return None,
+            _ => None
         }
     }
 
     fn get_u32(&self, point: &str) -> Option<u32> {
         for data_tmp in self.data.iter() {
-            match data_tmp {
-                SDataTypes::SolisU32(data) => {
-                    if data.name.contains(point) && (data.name.len() == point.len()) {
-                        return Some(data.value);
-                    }
-                },
-                _ => {},
+            if let SDataTypes::SolisU32(data) = data_tmp {
+                if data.name.contains(point) && (data.name.len() == point.len()) {
+                    return Some(data.value);
+                }
             }
         }
-        return None
+        None
     }
 
     fn get_u32_by_index(&self, idx: usize) -> Option<u32> {
         match self.data[idx] {
             SDataTypes::SolisU32(data) => {
-                return Some(data.value);
+                Some(data.value)
             },
-            _ => return None,
+            _ => None
         }
     }
 
     fn get_i16(&self, point: &str) -> Option<i16> {
         for data_tmp in self.data.iter() {
-            match data_tmp {
-                SDataTypes::SolisI16(data) => {
-                    if data.name.contains(point) && (data.name.len() == point.len()) {
-                        return Some(data.value);
-                    }
-                },
-                _ => {},
+            if let SDataTypes::SolisI16(data) = data_tmp {
+                if data.name.contains(point) && (data.name.len() == point.len()) {
+                    return Some(data.value);
+                }
             }
         }
-        return None
+        None
     }
 
     fn get_i16_by_index(&self, idx: usize) -> Option<i16> {
         match self.data[idx] {
             SDataTypes::SolisI16(data) => {
-                return Some(data.value);
+                Some(data.value)
             },
-            _ => return None,
+            _ => None
         }
     }
 
     fn get_i32(&self, point: &str) -> Option<i32> {
         for data_tmp in self.data.iter() {
-            match data_tmp {
-                SDataTypes::SolisI32(data) => {
-                    if data.name.contains(point) && (data.name.len() == point.len()) {
-                        return Some(data.value);
-                    }
-                },
-                _ => {},
+            if let SDataTypes::SolisI32(data) = data_tmp {
+                if data.name.contains(point) && (data.name.len() == point.len()) {
+                    return Some(data.value);
+                }
             }
         }
-        return None
+        None
     }
 
     fn get_i32_by_index(&self, idx: usize) -> Option<i32> {
         match self.data[idx] {
             SDataTypes::SolisI32(data) => {
-                return Some(data.value);
+                Some(data.value)
             },
-            _ => return None,
+            _ => None
         }
     }
 

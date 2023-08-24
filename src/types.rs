@@ -20,43 +20,43 @@ pub struct Point<T: PointType<T>> {
 
 impl PointType<i16> for i16 {
     fn decode(data: Vec<u16>) -> i16 {
-        return data[0] as i16;
+        data[0] as i16
     }
 
     fn encode(data: i16) -> Vec<u16> {
-        return vec![data as u16];
+        vec![data as u16]
     }
 }
 
 impl PointType<i32> for i32 {
     fn decode(data: Vec<u16>) -> i32 {
         let bytes = to_be_bytes(data).try_into().unwrap();
-        return i32::from_be_bytes(bytes);
+        i32::from_be_bytes(bytes)
     }
 
     fn encode(data: i32) -> Vec<u16> {
-        return to_u16_vector(&data.to_be_bytes());
+        to_u16_vector(&data.to_be_bytes())
     }
 }
 
 impl PointType<u16> for u16 {
     fn decode(data: Vec<u16>) -> u16 {
-        return data[0];
+        data[0]
     }
 
     fn encode(data: u16) -> Vec<u16> {
-        return vec![data];
+        vec![data]
     }
 }
 
 impl PointType<u32> for u32 {
     fn decode(data: Vec<u16>) -> u32 {
         let bytes = to_be_bytes(data).try_into().unwrap();
-        return u32::from_be_bytes(bytes);
+        u32::from_be_bytes(bytes)
     }
 
     fn encode(data: u32) -> Vec<u16> {
-        return to_u16_vector(&data.to_be_bytes());
+        to_u16_vector(&data.to_be_bytes())
     }
 }
 
