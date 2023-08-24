@@ -2,8 +2,8 @@ use super::*;
 
 pub fn model() -> SolModel {
     let mut ret = SolModel {
-        start_addr: 3005,
-        end_addr: 3044,
+        start_addr: 3004,
+        end_addr: 3043,
         model_number: 2,
         qtd: 40,
         data: Vec::new(),
