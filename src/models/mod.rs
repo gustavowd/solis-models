@@ -2,6 +2,7 @@ use crate::types::*;
 
 pub mod model1;
 pub mod model2;
+pub mod model4;
 
 #[derive(Debug, Clone)]
 pub struct SolModel {
@@ -62,6 +63,7 @@ impl SolisModels for SolModel {
         match model_number {
             1 => model1::model(),
             2 => model2::model(),
+            4 => model4::model(),
             _ => model1::model(),
         }
     }
