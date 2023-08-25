@@ -8,8 +8,8 @@ pub fn model() -> SolModel {
         qtd: 4,
         data: Vec::new(),
     };
-    ret.data.push(SDataTypes::SolisU32(Point { name: "Reactive power", offset: 0, length: 2, write_access: false, value: 0 } ));
-    ret.data.push(SDataTypes::SolisU32(Point { name: "Apparent power", offset: 2, length: 2, write_access: false, value: 0 } ));
+    ret.data.push(SDataTypes::SolisI32(Point { name: "Reactive power", offset: 0, length: 2, write_access: false, value: 0 } ));
+    ret.data.push(SDataTypes::SolisI32(Point { name: "Apparent power", offset: 2, length: 2, write_access: false, value: 0 } ));
 
     ret
 }
