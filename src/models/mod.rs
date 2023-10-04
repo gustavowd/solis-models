@@ -364,7 +364,8 @@ impl From<(Vec<u16>, u16, u16, &SolModel)> for SolModel {
                     SDataTypes::SolisString(data) => {
                         if offset == data.offset {
                             let slice = from.0[data.offset as usize..(data.offset + data.length) as usize].to_vec();
-                            data.value = Point::<String>::decode(slice).value;
+                            let hex_string = format!("{:4X}", slice[0]);
+                            data.value = hex_string.chars().rev().collect();
                             offset += data.length;
                             qtd -= data.length;
                         }
