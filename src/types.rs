@@ -60,6 +60,35 @@ impl PointType<u32> for u32 {
     }
 }
 
+impl PointType<String> for String {
+    fn decode(data: Vec<u16>) -> String {
+        let bytes: Vec<u8> = to_be_bytes(data);
+        let fbytes: Vec<u8> = bytes.iter().filter(|b| **b != 0).copied().collect();
+        String::from_utf8(fbytes).unwrap()
+    }
+
+    fn encode(data: String) -> Vec<u16> {
+        return to_u16_vector(data.as_bytes());
+    }
+}
+
+impl PointType<Point<String>> for Point<String> {
+    fn decode(data: Vec<u16>) -> Point<String> {
+        let bytes: Vec<u8> = to_be_bytes(data);
+        let fbytes: Vec<u8> = bytes.iter().filter(|b| **b != 0).copied().collect();
+        let data: Point<String> = Point { name: "", offset: 0, length: 0, write_access: false, value: String::from_utf8(fbytes).unwrap() };
+        data
+    }
+
+    fn encode(data: Point<String>) -> Vec<u16> {
+        let mut regs = String::encode(data.value);
+        for _i in 0..(data.length-(regs.len() as u16)){
+            regs.push(0);
+        }
+        regs
+    }
+}
+
 
 #[derive(Debug, Clone)]
 pub enum SDataTypes {
@@ -67,6 +96,7 @@ pub enum SDataTypes {
     SolisU32(Point<u32>),
     SolisI16(Point<i16>),
     SolisI32(Point<i32>),
+    SolisString(Point<String>)
 }
 
 pub trait SolisTypes {
@@ -75,6 +105,7 @@ pub trait SolisTypes {
     fn new_u32 (data: u32) -> Self;
     fn new_i16 (data: i16) -> Self;
     fn new_i32 (data: i32) -> Self;
+    fn new_string (data: &str) -> Self;
 }
 
 impl SolisTypes for SDataTypes {
@@ -89,5 +120,8 @@ impl SolisTypes for SDataTypes {
     }
     fn new_i32 (data: i32) -> SDataTypes {
         SDataTypes::SolisI32(Point { name: "", offset: 0, length: 0, write_access: false, value: data } )
+    }
+    fn new_string (data: &str) -> SDataTypes {
+        SDataTypes::SolisString(Point { name: "", offset: 0, length: 0, write_access: false, value: String::from(data) } )
     }
 }

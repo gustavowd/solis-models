@@ -3,6 +3,7 @@ use crate::types::*;
 pub mod model1;
 pub mod model2;
 pub mod model4;
+pub mod model5;
 
 #[derive(Debug, Clone)]
 pub struct SolModel {
@@ -99,6 +100,13 @@ impl SolisModels for SolModel {
                         }
                     }
                 },
+                SDataTypes::SolisString(data) => {
+                    if data.name.contains(point) && (data.name.len() == point.len()){
+                        if let SDataTypes::SolisString(update_value) = value {
+                            data.value = update_value.value.clone();
+                        }
+                    }
+                }
             }
         }
     }
@@ -125,6 +133,11 @@ impl SolisModels for SolModel {
                     data.value = update_value.value;
                 }
             },
+            SDataTypes::SolisString(data) => {
+                if let SDataTypes::SolisString(update_value) = value {
+                    data.value = update_value.value.clone();
+                }
+            }
         }
     }
 
@@ -151,6 +164,11 @@ impl SolisModels for SolModel {
                         return data_tmp.clone();
                     }
                 },
+                SDataTypes::SolisString(data) => {
+                    if data.name.contains(point) && (data.name.len() == point.len()) {
+                        return data_tmp.clone();
+                    }
+                }
             };
         }
         SDataTypes::SolisU16(Point { name: "", offset: 0, length: 1, write_access: false, value: 0 } )
@@ -179,6 +197,11 @@ impl SolisModels for SolModel {
                         return Some(idx);
                     }
                 },
+                SDataTypes::SolisString(data) => {
+                    if data.name.contains(point) && (data.name.len() == point.len()) {
+                        return Some(idx);
+                    }
+                }
             };
         }
         None
@@ -271,7 +294,8 @@ impl SolisModels for SolModel {
                 SDataTypes::SolisI16(data) => println!("{}: {}", data.name, data.value),
                 SDataTypes::SolisI32(data) => println!("{}: {}", data.name, data.value),
                 SDataTypes::SolisU16(data) => println!("{}: {}", data.name, data.value),
-                SDataTypes::SolisU32(data) => println!("{}: {}", data.name, data.value)
+                SDataTypes::SolisU32(data) => println!("{}: {}", data.name, data.value),
+                SDataTypes::SolisString(data) => println!("{}: {}", data.name, data.value.clone()),
             }
         }
         println!(" ");
@@ -287,7 +311,8 @@ impl From<SolModel> for Vec<u16> {
                 SDataTypes::SolisU16(data) => registers.extend(u16::encode(data.value)),
                 SDataTypes::SolisU32(data) => registers.extend(u32::encode(data.value)),
                 SDataTypes::SolisI16(data) => registers.extend(i16::encode(data.value)),
-                SDataTypes::SolisI32(data) => registers.extend(i32::encode(data.value))
+                SDataTypes::SolisI32(data) => registers.extend(i32::encode(data.value)),
+                SDataTypes::SolisString(data) => registers.extend(Point::<String>::encode(data.clone())),
             }
         }
         registers
@@ -331,6 +356,14 @@ impl From<(Vec<u16>, u16, u16, &SolModel)> for SolModel {
                         if offset == data.offset {
                             let slice = from.0[data.offset as usize..(data.offset + data.length) as usize].to_vec();
                             data.value = i32::decode(slice);
+                            offset += data.length;
+                            qtd -= data.length;
+                        }
+                    },
+                    SDataTypes::SolisString(data) => {
+                        if offset == data.offset {
+                            let slice = from.0[data.offset as usize..(data.offset + data.length) as usize].to_vec();
+                            data.value = Point::<String>::decode(slice).value;
                             offset += data.length;
                             qtd -= data.length;
                         }
