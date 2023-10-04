@@ -65,6 +65,7 @@ impl SolisModels for SolModel {
             1 => model1::model(),
             2 => model2::model(),
             4 => model4::model(),
+            5 => model5::model(),
             _ => model1::model(),
         }
     }
