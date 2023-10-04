@@ -35,6 +35,8 @@ pub trait SolisModels {
     fn get_i16_by_index(&self, idx: usize) -> Option<i16>;
     fn get_i32(&self, point: &str) -> Option<i32>;
     fn get_i32_by_index(&self, idx: usize) -> Option<i32>;
+    fn get_string(&self, point: &str) -> Option<String>;
+    fn get_string_by_index(&self, idx: usize) -> Option<String>;
     fn print(&self);
 }
 
@@ -283,6 +285,26 @@ impl SolisModels for SolModel {
         match self.data[idx] {
             SDataTypes::SolisI32(data) => {
                 Some(data.value)
+            },
+            _ => None
+        }
+    }
+
+    fn get_string(&self, point: &str) -> Option<String> {
+        for data_tmp in self.data.iter() {
+            if let SDataTypes::SolisString(data) = data_tmp {
+                if data.name.contains(point) && (data.name.len() == point.len()) {
+                    return Some(data.value.clone());
+                }
+            }
+        }
+        None
+    }
+
+    fn get_string_by_index(&self, idx: usize) -> Option<String> {
+        match &self.data[idx] {
+            SDataTypes::SolisString(data) => {
+                Some(data.value.clone())
             },
             _ => None
         }
