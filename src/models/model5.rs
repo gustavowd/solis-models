@@ -4,6 +4,7 @@ pub fn model() -> SolModel {
     let mut ret = SolModel {
         start_addr: 3060,
         end_addr: 3063,
+        reg_types: 3,
         model_number: 5,
         qtd: 4,
         data: Vec::new(),
