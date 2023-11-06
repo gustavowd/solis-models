@@ -4,11 +4,14 @@ pub mod model1;
 pub mod model2;
 pub mod model4;
 pub mod model5;
+pub mod model6_4x;
+pub mod model7_4x;
 
 #[derive(Debug, Clone)]
 pub struct SolModel {
     pub start_addr: u16,
     pub end_addr: u16,
+    pub reg_types: u16,
     pub model_number: u16,
     pub qtd: u16,
     pub data: Vec<SDataTypes>,
@@ -68,6 +71,8 @@ impl SolisModels for SolModel {
             2 => model2::model(),
             4 => model4::model(),
             5 => model5::model(),
+            6 => model6_4x::model(),
+            7 => model7_4x::model(),
             _ => model1::model(),
         }
     }
