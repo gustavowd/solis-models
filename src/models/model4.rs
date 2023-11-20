@@ -6,7 +6,7 @@ pub fn model() -> SolModel {
         end_addr: 3058,
         reg_types: 3,
         model_number: 4,
-        qtd: 4,
+        qtd: 2,
         data: Vec::new(),
     };
     ret.data.push(SDataTypes::SolisI32(Point { name: "Reactive power", offset: 0, length: 2, write_access: false, value: 0 } ));

@@ -9,7 +9,7 @@ pub fn model() -> SolModel {
         qtd: 3,
         data: Vec::new(),
     };
-    ret.data.push(SDataTypes::SolisI16(Point { name: "Reactive power limitation", offset: 0, length: 1, write_access: true, value: 0 } ));
+    ret.data.push(SDataTypes::SolisU16(Point { name: "Reactive power limitation", offset: 0, length: 1, write_access: true, value: 0 } ));
     ret.data.push(SDataTypes::SolisU16(Point { name: "Power limitation", offset: 1, length: 1, write_access: true, value: 0 } ));
     ret.data.push(SDataTypes::SolisI16(Point { name: "PF Setting", offset: 2, length: 1, write_access: true, value: 0 } ));
 
