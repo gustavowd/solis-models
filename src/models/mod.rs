@@ -6,6 +6,7 @@ pub mod model4;
 pub mod model5;
 pub mod model6_4x;
 pub mod model7_4x;
+pub mod model8_4x;
 
 #[derive(Debug, Clone)]
 pub struct SolModel {
@@ -73,6 +74,7 @@ impl SolisModels for SolModel {
             5 => model5::model(),
             6 => model6_4x::model(),
             7 => model7_4x::model(),
+            8 => model8_4x::model(),
             _ => model1::model(),
         }
     }
